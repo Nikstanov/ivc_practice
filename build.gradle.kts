@@ -6,6 +6,7 @@ plugins {
 
 group = "com.ivc.nikstanov"
 version = "0.0.1-SNAPSHOT"
+var springCloudVersion = "22023.0.2"
 
 java {
 	toolchain {
@@ -23,11 +24,16 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set("springCloudVersion", "22023.0.2")
+}
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -39,3 +45,10 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
+	}
+}
+
