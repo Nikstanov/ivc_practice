@@ -3,12 +3,15 @@ package com.ivc.nikstanov.project.controller;
 import com.ivc.nikstanov.project.dto.UserDto;
 import com.ivc.nikstanov.project.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,7 +36,7 @@ public class UserController {
             description = "HTTP Status 201 CREATED"
     )
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto user){
+    public ResponseEntity<UserDto> createUser(@Validated @RequestBody UserDto user){
         UserDto savedUser = userService.createUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
@@ -47,7 +50,7 @@ public class UserController {
             description = "HTTP Status 200 SUCCESS"
     )
     @GetMapping("{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId){
+    public ResponseEntity<UserDto> getUserById(@Parameter(required = true, description = "Id of user that must be found") @PathVariable("id") @Validated @Min(0) Long userId){
         UserDto user = userService.getUserById(userId);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
@@ -77,7 +80,7 @@ public class UserController {
     )
     @PutMapping("{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long userId,
-                                           @RequestBody @Valid UserDto user){
+                                           @RequestBody @Validated UserDto user){
         user.setId(userId);
         UserDto updatedUser = userService.updateUser(user);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
@@ -92,7 +95,7 @@ public class UserController {
             description = "HTTP Status 200 SUCCESS"
     )
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") Long userId){
+    public ResponseEntity<String> deleteUser(@Parameter(required = true, description = "Id of user that must be deleted") @PathVariable("id") @Validated @Min(0) Long userId){
         userService.deleteUser(userId);
         return new ResponseEntity<>("User successfully deleted!", HttpStatus.OK);
     }
