@@ -17,6 +17,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserDto {
 
+    @Schema(
+            accessMode = Schema.AccessMode.READ_ONLY,
+            description = "Id of user"
+    )
     private Long id;
 
     @Schema(
